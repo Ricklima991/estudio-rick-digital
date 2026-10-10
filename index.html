@@ -88,6 +88,8 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 <a href="#" data-aba="banners">🎨 <span>Fábrica de Banners</span></a>
 <a href="#" data-aba="ideias">💡 <span>Ideias de Posts</span></a>
 <a href="#" data-aba="orc">💰 <span>Orçamento Portfólio</span></a>
+<a href="#" data-aba="fin">💸 <span>Financeiro</span></a>
+<a href="#" data-aba="proj">📁 <span>Projetos</span></a>
 <a href="#" data-aba="tarefas">⏰ <span>Tarefas</span></a>
 <a href="#" data-aba="rel">📋 <span>Relatórios</span></a>
 <a href="#" data-aba="equipe">🤖 <span>Equipe 15 + Plantão</span></a>
@@ -244,6 +246,31 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 </div>
 <div class="panel"><h3>📄 Proposta pronta</h3><textarea id="o-texto" rows="12"></textarea><button class="btn btn-v" onclick="copiarTexto(document.getElementById('o-texto').value)">📋 Copiar proposta</button></div>
 </div>
+</div>
+<!-- FINANCEIRO -->
+<div id="aba-fin" class="aba">
+<div class="topo"><div><h1>💸 Financeiro</h1><p class="legend">O que entra (projetos) e o que sai (contas a pagar)</p></div></div>
+<div class="cards" style="grid-template-columns:repeat(3,1fr)"><div class="card" style="border-color:var(--s)"><div>✅ Recebido</div><div class="v" id="f-rec">R$ 0</div><small>50% entradas + 100% conclusões</small></div>
+<div class="card" style="border-color:var(--a)"><div>⏳ A receber</div><div class="v" id="f-arec">R$ 0</div><small>restantes de projetos abertos</small></div>
+<div class="card" style="border-color:var(--d)"><div>🧾 Contas a pagar</div><div class="v" id="f-pagar">R$ 0</div><small>pendentes</small></div></div>
+<div class="panel"><h3>📊 Gráfico do que entra por projeto</h3><div id="f-graf"></div></div>
+<div class="panel"><h3>🧾 Contas a pagar</h3>
+<div class="grid2"><div><label>Descrição</label><input id="c-desc" placeholder="Ex: Hospedagem, domínio, anúncios"></div>
+<div><label>Valor R$</label><input type="number" id="c-valor" value="100"></div></div>
+<div class="grid2" style="margin-top:.6rem"><div><label>Vencimento</label><input type="date" id="c-venc"></div>
+<div style="display:flex;align-items:flex-end"><button class="btn-g" onclick="addConta()">+ Adicionar conta</button></div></div>
+<div id="f-contas" style="margin-top:.8rem"></div></div>
+</div>
+<!-- PROJETOS -->
+<div id="aba-proj" class="aba">
+<div class="topo"><div><h1>📁 Projetos</h1><p class="legend" id="p-resumo">6 criados · 5 concluídos e pagos</p></div></div>
+<div class="panel"><h3>➕ Novo projeto (regra: 50% na entrada, 100% na conclusão)</h3>
+<div class="grid2"><div><label>Projeto</label><input id="p-nome" placeholder="Ex: Site Padaria Pão Dourado"></div>
+<div><label>Cliente</label><input id="p-cli" placeholder="Nome do cliente"></div></div>
+<div class="grid2" style="margin-top:.6rem"><div><label>Serviço</label><select id="p-serv"><option>Fanpage — R$ 497</option><option>Site Institucional — R$ 997</option><option>Landing Page — R$ 697</option><option>Loja Virtual — R$ 2.497</option><option>Manutenção — R$ 297</option></select></div>
+<div><label>Valor fechado R$</label><input type="number" id="p-valor" value="997"></div></div>
+<div style="margin-top:.6rem"><button class="btn-g" onclick="addProj()">+ Criar projeto (50% recebido)</button></div></div>
+<div class="panel"><div id="p-lista"></div></div>
 </div>
 <!-- TAREFAS -->
 <div id="aba-tarefas" class="aba">
@@ -436,7 +463,7 @@ function lerNot(id){const x=DB.not.find(n=>n.id===id);if(x)x.lida=true;save();up
 function marcarTodas(){DB.not.forEach(x=>x.lida=true);save();updNot();}
 // RENDER
 const ETAPAS=[['novo','🆕 Novos'],['qualificacao','🔍 Qualificação'],['quente','🔥 Quentes'],['negociacao','🤝 Negociação'],['cliente','✅ Clientes']];
-function render(){iniEq();iniSocial();
+function render(){iniEq();iniSocial();iniFin();
 const at=DB.leads.filter(l=>l.etapa!=='arquivado');
 const c={novo:0,qualificacao:0,quente:0,negociacao:0,cliente:0};let tot=0;
 at.forEach(l=>{if(c[l.etapa]!==undefined)c[l.etapa]++;if(l.etapa==='cliente')tot+=Number(l.valor||0);});
@@ -452,7 +479,7 @@ document.getElementById('r-total').textContent=at.length;document.getElementById
 document.getElementById('r-valor').textContent='R$ '+tot.toFixed(0);document.getElementById('r-conv').textContent=conv+'%';
 document.getElementById('r-orig').innerHTML=Object.entries(org).sort((a,b)=>b[1]-a[1]).map(o=>'<div>'+o[0]+': <b>'+o[1]+'</b></div>').join('')||'—';
 document.getElementById('grid-equipe').innerHTML=DB.eq.map((f,i)=>'<div class="func'+(plantaoOn?' trab':'')+'"><div class="av" style="background:'+f.c+'">'+f.n.split(' ').map(x=>x[0]).slice(0,2).join('')+'</div><b style="font-size:.85rem">'+f.n+'</b><small>'+f.s+' · '+(f.g==='F'?'👩':'👨')+'</small><br><span class="st">'+(plantaoOn?'🟢 em plantão':'⚪ standby')+' · '+f.feitos+' ações</span></div>').join('');
-updNot();calcOrc();try{renderSocial();}catch(e){}try{renderMetricas(7);}catch(e){}try{renderHist();}catch(e){}}
+updNot();calcOrc();try{renderSocial();}catch(e){}try{renderMetricas(7);}catch(e){}try{renderHist();}catch(e){}try{renderFin();}catch(e){}try{renderProj();}catch(e){}}
 function foneReal(l){return String(l.tel||'').replace(/\D/g,'').length>=8;}
 function card(l){const wa=foneReal(l)?'<a class="btn btn-wa" target="_blank" href="'+waLink(l.tel,'Olá '+l.nome+'! Sobre '+l.servico+' — vi seu contato e quero ajudar!')+'">WhatsApp</a><button class="btn btn-wa" onclick="evoSendLead('+l.id+')" title="Envio automático via API">⚡Auto</button>':'<button class="btn btn-v" onclick="abrirLead('+l.id+')" title="Complete o WhatsApp na ficha">📞 Completar fone</button>';return '<div class="lead" draggable="true" ondragstart="event.dataTransfer.setData(\'id\','+l.id+')"><b>'+l.nome+'</b>'+(foneReal(l)?'':' <span class="tag" style="background:#FEE2E2;color:#991B1B">sem fone</span>')+'<small>'+l.servico+' · '+l.origem+'</small><span class="tag">'+l.origem+'</span>'+(l.valor?'<span class="tag">R$ '+l.valor+'</span>':'')+'<div class="la">'+wa+'<button class="btn btn-v" onclick="abrirLead('+l.id+')">Ver</button><button class="btn btn-v" onclick="analisarLead('+l.id+')" title="Análise local do perfil">🔍 Análise</button><button class="btn btn-p" onclick="avancarEtapa('+l.id+')" title="Avançar etapa">➡️</button><button class="btn btn-x" onclick="delLead('+l.id+')">×</button></div></div>';}
 // Análise LOCAL do perfil (heurística a partir dos dados da ficha — estimativa, não é IA externa)
@@ -480,6 +507,30 @@ function addAllAuto(){if(!autoLeads.length)return;let cf=0;autoLeads.forEach((a,
 function abrirTarefa(){document.getElementById('m-tar').classList.add('aberto');}
 function salvarTarefa(){const t=document.getElementById('t-tit').value;if(!t)return alert('Título obrigatório');DB.tarefas.push({id:Date.now(),tit:t,data:document.getElementById('t-data').value,ok:false});document.getElementById('m-tar').classList.remove('aberto');save();}
 function okTar(id){DB.tarefas.find(t=>t.id===id).ok=true;save();}
+// FINANCEIRO + PROJETOS (50% entrada / 100% conclusão)
+function iniFin(){if(!DB.contas)DB.contas=[];if(!DB.projetos)DB.projetos=[];
+if(!DB.finSeed){DB.finSeed=true;const S=[['Fanpage — cliente 1','Fanpage',497],['Site Institucional — cliente 2','Site Institucional',997],['Landing Page — cliente 3','Landing Page',697],['Loja Virtual — cliente 4','Loja Virtual',2497],['Site Institucional — cliente 5','Site Institucional',997],['Fanpage — cliente 6 (em andamento)','Fanpage',497]];
+S.forEach((s,i)=>{const fim=i<5;DB.projetos.push({id:Date.now()+i,nome:s[0],cliente:'',servico:s[1],valor:s[2],status:fim?'concluido':'andamento',pago50:true,pago100:fim,data:new Date().toLocaleString('pt-BR')});});}}
+function finTotais(){iniFin();let rec=0,arec=0;DB.projetos.forEach(p=>{const v=Number(p.valor||0);if(p.pago50)rec+=v/2;else arec+=v/2;if(p.pago100)rec+=v/2;else if(p.status==='concluido')arec+=v/2;});
+const pagar=DB.contas.filter(c=>!c.paga).reduce((s,c)=>s+Number(c.valor||0),0);return {rec,arec,pagar};}
+function brl(v){return 'R$ '+Number(v||0).toFixed(0);}
+function renderFin(){iniFin();const t=finTotais();
+document.getElementById('f-rec').textContent=brl(t.rec);document.getElementById('f-arec').textContent=brl(t.arec);document.getElementById('f-pagar').textContent=brl(t.pagar);
+document.getElementById('f-graf').innerHTML=DB.projetos.map(p=>{const v=Number(p.valor||0)||1;const pago=(p.pago50?v/2:0)+(p.pago100?v/2:0);const pc=Math.round(pago/v*100);
+return '<div style="margin:.45rem 0"><div style="display:flex;justify-content:space-between;font-size:.85rem"><b>'+p.nome+'</b><span>'+brl(pago)+' / '+brl(v)+' ('+pc+'%)</span></div><div style="background:#E5E7EB;border-radius:8px;height:12px;overflow:hidden"><div style="height:100%;width:'+pc+'%;background:'+(pc===100?'#10B981':'#F59E0B')+'"></div></div></div>';}).join('')||'<p class="legend">Sem projetos ainda.</p>';
+document.getElementById('f-contas').innerHTML=DB.contas.map(c=>'<div style="padding:.6rem 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:.5rem"><div><b>'+(c.paga?'✅ ':'⏳ ')+c.desc+'</b><br><small>'+brl(c.valor)+' · venc '+(c.venc||'—')+'</small></div><div style="display:flex;gap:.35rem">'+(c.paga?'':'<button class="btn btn-p" onclick="pagarConta('+c.id+')">Pagar</button>')+'<button class="btn btn-x" onclick="delConta('+c.id+')">×</button></div></div>').join('')||'<p class="legend">Nenhuma conta lançada 🎉</p>';}
+function addConta(){const d=document.getElementById('c-desc').value.trim();const v=Number(document.getElementById('c-valor').value)||0;if(!d||!v)return alert('Descrição e valor obrigatórios');DB.contas.unshift({id:Date.now(),desc:d,valor:v,venc:document.getElementById('c-venc').value,paga:false});document.getElementById('c-desc').value='';save();}
+function pagarConta(id){DB.contas.find(c=>c.id===id).paga=true;save();}
+function delConta(id){if(confirm('Excluir conta?')){DB.contas=DB.contas.filter(c=>c.id!==id);save();}}
+function renderProj(){iniFin();const tot=DB.projetos.length,ok=DB.projetos.filter(p=>p.status==='concluido'&&p.pago100).length;
+document.getElementById('p-resumo').textContent=tot+' criados · '+ok+' concluídos e pagos';
+document.getElementById('p-lista').innerHTML=DB.projetos.map(p=>{const v=Number(p.valor||0);
+return '<div style="padding:.7rem 0;border-bottom:1px solid #eee"><div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap"><div><b>'+(p.status==='concluido'?'✅ ':'🚧 ')+p.nome+'</b><br><small>'+p.servico+' · '+brl(v)+' · 50%: '+(p.pago50?'✅ recebido ('+brl(v/2)+')':'⏳')+' · 100%: '+(p.pago100?'✅ recebido ('+brl(v/2)+')':'⏳')+(p.cliente?' · 👤 '+p.cliente:'')+'</small></div><div style="display:flex;gap:.35rem;flex-wrap:wrap">'+(p.pago50?'':'<button class="btn btn-p" onclick="projPagar('+p.id+',50)">Receber 50%</button>')+(p.pago100?'':'<button class="btn btn-p" onclick="projPagar('+p.id+',100)">Receber 100%</button>')+(p.status==='concluido'?'<button class="btn btn-v" onclick="projReabrir('+p.id+')">Reabrir</button>':'<button class="btn btn-wa" onclick="projConcluir('+p.id+')">Concluir</button>')+'<button class="btn btn-x" onclick="delProj('+p.id+')">×</button></div></div></div>';}).join('')||'<p class="legend">Nenhum projeto. Crie o primeiro acima.</p>';}
+function addProj(){const n=document.getElementById('p-nome').value.trim();const v=Number(document.getElementById('p-valor').value)||0;if(!n||!v)return alert('Nome e valor obrigatórios');DB.projetos.unshift({id:Date.now(),nome:n,cliente:document.getElementById('p-cli').value.trim(),servico:document.getElementById('p-serv').value.split(' — ')[0],valor:v,status:'andamento',pago50:true,pago100:false,data:new Date().toLocaleString('pt-BR')});notif('📁 Projeto criado: '+n,'50% recebido ('+brl(v/2)+')');save();acaoReal('📁 Projeto criado',n+' — 50% recebido '+brl(v/2));}
+function projPagar(id,q){const p=DB.projetos.find(x=>x.id===id);if(!p)return;if(q===50)p.pago50=true;else p.pago100=true;save();acaoReal('💰 Recebido projeto',p.nome+' — '+(q===50?'50% '+brl(p.valor/2):'100% '+brl(p.valor/2)));}
+function projConcluir(id){const p=DB.projetos.find(x=>x.id===id);if(!p)return;p.status='concluido';p.pago100=true;save();notif('✅ Projeto concluído: '+p.nome,'100% recebido');acaoReal('✅ Projeto concluído',p.nome+' — 100% recebido '+brl(p.valor));}
+function projReabrir(id){DB.projetos.find(x=>x.id===id).status='andamento';save();}
+function delProj(id){if(confirm('Excluir projeto?')){DB.projetos=DB.projetos.filter(p=>p.id!==id);save();}}
 function copiarTexto(t){navigator.clipboard.writeText(t).then(()=>alert('✅ Copiado!'));}
 function copiarCodigo(){copiarTexto('<form id=cap><input name=nome required placeholder=Seu nome><input name=tel required placeholder=WhatsApp><button>Quero orçamento grátis</button></form><p>Resposta em: '+DB.cfg.wa+'</p>');}
 function salvarCfg(){DB.cfg={marca:document.getElementById('cfg-marca').value,wa:document.getElementById('cfg-wa').value,tk:document.getElementById('cfg-tk').value,pf:document.getElementById('cfg-pf').value,num:document.getElementById('cfg-num').value,cloud:document.getElementById('cfg-cloud').value.trim().replace(/\/$/,''),evo:document.getElementById('cfg-evo').value.trim().replace(/\/$/,''),evokey:document.getElementById('cfg-evokey').value.trim(),evoinst:document.getElementById('cfg-evoinst').value.trim()||'rick-digital',evomsq:document.getElementById('cfg-evomsq').value,ttuser:document.getElementById('cfg-ttuser').value,ttagenda:document.getElementById('cfg-ttagenda').value};save();alert('✅ Salvo! Nuvem: '+(DB.cfg.cloud||'não configurada')+' · WhatsApp auto: '+((DB.cfg.evo&&DB.cfg.evokey)?'ON':'off (manual)'));}
@@ -695,9 +746,9 @@ save();document.getElementById('ordem').value='';}
 // NUVEM — mesmo controle PC + celular, sem estar conectado ao celular
 let cloudTimer=null;
 function cloudURL(){return (DB.cfg.cloud||'').replace(/\/$/,'');}
-async function cloudPush(silent){const u=cloudURL();if(!u)return alert('Cole a URL do Firebase em Configurações → Nuvem');try{await fetch(u+'/crm.json',{method:'PUT',body:JSON.stringify({leads:DB.leads,tarefas:DB.tarefas,not:DB.not,comunicados:DB.comunicados||[],radio:(DB.radio||[]).slice(0,30),updated:new Date().toISOString()})});document.getElementById('cloud-st').textContent='nuvem: enviado ✅ '+new Date().toLocaleTimeString('pt-BR');if(!silent)alert('✅ Nuvem atualizada! Abra no celular e puxe.');}catch(e){alert('⚠️ Falha nuvem — confira URL e regras do Firebase');}}
-async function cloudPull(){const u=cloudURL();if(!u)return alert('Cole a URL do Firebase em Configurações → Nuvem');try{const j=await(await fetch(u+'/crm.json')).json();if(j&&(j.leads||j.tarefas)){DB.leads=j.leads||DB.leads;DB.tarefas=j.tarefas||DB.tarefas;DB.not=j.not||DB.not;if(j.comunicados)DB.comunicados=j.comunicados;if(j.radio)DB.radio=j.radio;save();document.getElementById('cloud-st').textContent='nuvem: recebido ✅ '+new Date().toLocaleTimeString('pt-BR');alert('✅ Dados da nuvem carregados!');}else alert('Nuvem vazia ainda — envie primeiro.');}catch(e){alert('⚠️ Falha ao puxar — confira URL');}}
-function cloudAuto(){if(cloudTimer){clearInterval(cloudTimer);cloudTimer=null;document.getElementById('cloud-st').textContent='nuvem: off';return;}const u=cloudURL();if(!u)return alert('Cole a URL do Firebase primeiro');cloudTimer=setInterval(async()=>{try{await fetch(u+'/crm.json',{method:'PUT',body:JSON.stringify({leads:DB.leads,tarefas:DB.tarefas,not:DB.not,updated:new Date().toISOString()})});const j=await(await fetch(u+'/crm.json')).json();if(j&&j.updated){document.getElementById('cloud-st').textContent='nuvem: auto ✅ '+new Date().toLocaleTimeString('pt-BR');}}catch(e){}} ,15000);document.getElementById('cloud-st').textContent='nuvem: auto ON 🔄';alert('🔄 Auto-sync ligado! PC e celular trocam dados a cada 15s.');}
+async function cloudPush(silent){const u=cloudURL();if(!u)return alert('Cole a URL do Firebase em Configurações → Nuvem');try{await fetch(u+'/crm.json',{method:'PUT',body:JSON.stringify({leads:DB.leads,tarefas:DB.tarefas,not:DB.not,comunicados:DB.comunicados||[],radio:(DB.radio||[]).slice(0,30),contas:DB.contas||[],projetos:DB.projetos||[],finSeed:DB.finSeed||false,updated:new Date().toISOString()})});document.getElementById('cloud-st').textContent='nuvem: enviado ✅ '+new Date().toLocaleTimeString('pt-BR');if(!silent)alert('✅ Nuvem atualizada! Abra no celular e puxe.');}catch(e){alert('⚠️ Falha nuvem — confira URL e regras do Firebase');}}
+async function cloudPull(){const u=cloudURL();if(!u)return alert('Cole a URL do Firebase em Configurações → Nuvem');try{const j=await(await fetch(u+'/crm.json')).json();if(j&&(j.leads||j.tarefas)){DB.leads=j.leads||DB.leads;DB.tarefas=j.tarefas||DB.tarefas;DB.not=j.not||DB.not;if(j.comunicados)DB.comunicados=j.comunicados;if(j.radio)DB.radio=j.radio;if(j.contas)DB.contas=j.contas;if(j.projetos)DB.projetos=j.projetos;if(j.finSeed!==undefined)DB.finSeed=j.finSeed;save();document.getElementById('cloud-st').textContent='nuvem: recebido ✅ '+new Date().toLocaleTimeString('pt-BR');alert('✅ Dados da nuvem carregados!');}else alert('Nuvem vazia ainda — envie primeiro.');}catch(e){alert('⚠️ Falha ao puxar — confira URL');}}
+function cloudAuto(){if(cloudTimer){clearInterval(cloudTimer);cloudTimer=null;document.getElementById('cloud-st').textContent='nuvem: off';return;}const u=cloudURL();if(!u)return alert('Cole a URL do Firebase primeiro');cloudTimer=setInterval(async()=>{try{await fetch(u+'/crm.json',{method:'PUT',body:JSON.stringify({leads:DB.leads,tarefas:DB.tarefas,not:DB.not,contas:DB.contas||[],projetos:DB.projetos||[],updated:new Date().toISOString()})});const j=await(await fetch(u+'/crm.json')).json();if(j&&j.updated){document.getElementById('cloud-st').textContent='nuvem: auto ✅ '+new Date().toLocaleTimeString('pt-BR');}}catch(e){}} ,15000);document.getElementById('cloud-st').textContent='nuvem: auto ON 🔄';alert('🔄 Auto-sync ligado! PC e celular trocam dados a cada 15s.');}
 // PWA
 let deferred=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
 function instalarApp(){if(deferred){deferred.prompt();}else alert('📱 No celular: menu ⋮ → “Instalar app / Adicionar à tela inicial”. No PC: ícone instalar na barra de endereço.');}
