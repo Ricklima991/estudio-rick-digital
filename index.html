@@ -20,6 +20,8 @@ header{background:rgba(15,23,42,.86);backdrop-filter:blur(14px);-webkit-backdrop
 @keyframes lamp{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(180deg) brightness(1.15)}100%{filter:hue-rotate(360deg) brightness(1)}}
 .logo:hover .logo-badge{transform:perspective(400px) rotateX(0deg) scale(1.06)}
 .logo b{font-size:1.05rem;letter-spacing:.3px;text-shadow:0 2px 8px rgba(0,0,0,.4)}.logo small{display:block;color:#93C5FD;font-weight:400;font-size:.72rem}
+.marca3d{font-weight:900;letter-spacing:1.5px;background:linear-gradient(90deg,#7DD3FC,#A78BFA,#F472B6,#FDE68A,#7DD3FC);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:marcaFlux 6s linear infinite;filter:drop-shadow(0 2px 0 rgba(0,0,0,.65)) drop-shadow(0 7px 14px rgba(124,58,237,.55))}
+@keyframes marcaFlux{to{background-position:300% 0}}
 .hbtns{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .hbtn{padding:.55rem .95rem;border-radius:10px;text-decoration:none;font-weight:700;font-size:.85rem;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.35),0 8px 16px rgba(0,0,0,.3);transition:transform .12s,box-shadow .12s,filter .2s}
 .hbtn:hover{filter:brightness(1.12);transform:translateY(-2px)}.hbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
@@ -91,7 +93,7 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:16px;border:1px sol
 </head>
 <body>
 <header>
-<div class="logo"><div class="logo-badge">RD</div><div><b>ESTÚDIO RICK DIGITAL</b><small>CRM + Fábrica de Banners + Leads</small></div></div>
+<div class="logo"><div class="logo-badge">RD</div><div><b class="marca3d">ESTÚDIO RICK DIGITAL</b><small>CRM + Fábrica de Banners + Leads</small></div></div>
 <div class="hbtns">
 <a class="hbtn wa" href="https://wa.me/qr/MOOILZTYKO2EI1" target="_blank">💬 WhatsApp</a>
 <a class="hbtn tk" href="https://www.tiktok.com/@ricklima991" target="_blank">🎵 TikTok</a>
@@ -708,8 +710,10 @@ if(m==='5'){g.addColorStop(0,'#7F1D1D');g.addColorStop(1,'#EF4444');}
 if(m==='6'){g.addColorStop(0,'#000');g.addColorStop(1,'#1F2937');}
 x.fillStyle=g;x.fillRect(0,0,1080,1080);
 x.fillStyle='rgba(255,255,255,.12)';x.beginPath();x.arc(900,150,220,0,7);x.fill();
-x.fillStyle='#fff';x.font='900 90px Arial';x.fillText('RD',60,140);
-x.font='700 34px Arial';x.fillText('ESTÚDIO RICK DIGITAL',180,125);
+x.fillStyle='rgba(0,0,0,.45)';x.font='900 90px Arial';[4,3,2,1].forEach(o=>x.fillText('RD',60+o,140+o));
+x.fillStyle='#fff';x.fillText('RD',60,140);
+x.font='700 34px Arial';x.fillStyle='rgba(0,0,0,.45)';[3,2,1].forEach(o=>x.fillText('ESTÚDIO RICK DIGITAL',180+o,125+o));
+let mg=x.createLinearGradient(180,90,720,130);mg.addColorStop(0,'#7DD3FC');mg.addColorStop(.5,'#A78BFA');mg.addColorStop(1,'#F472B6');x.fillStyle=mg;x.fillText('ESTÚDIO RICK DIGITAL',180,125);
 x.fillStyle=document.getElementById('b-cor').value;x.font='900 84px Arial';
 wrap(x,document.getElementById('b-tit').value.toUpperCase(),60,420,960,92);
 x.font='400 44px Arial';wrap(x,document.getElementById('b-sub').value,60,680,960,52);
