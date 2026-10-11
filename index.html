@@ -74,7 +74,8 @@ textarea{resize:vertical}
 .equipe{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;perspective:1200px}
 .func{background:linear-gradient(180deg,#fff,#F1F5FF);border-radius:16px;padding:.9rem;text-align:center;border:1px solid #E5E7EB;position:relative;box-shadow:0 8px 20px rgba(2,6,23,.1);transition:transform .2s,box-shadow .2s}
 .func:hover{transform:translateY(-5px) perspective(500px) rotateX(6deg);box-shadow:0 18px 36px rgba(124,58,237,.25)}
-.func .av{width:54px;height:54px;border-radius:50%;margin:0 auto .5rem;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem;box-shadow:0 5px 0 rgba(0,0,0,.2),0 10px 20px rgba(0,0,0,.25),inset 0 2px 3px rgba(255,255,255,.5);border:2px solid rgba(255,255,255,.7)}
+.func .av{width:54px;height:54px;border-radius:50%;margin:0 auto .5rem;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem;box-shadow:0 5px 0 rgba(0,0,0,.2),0 10px 20px rgba(0,0,0,.25),inset 0 2px 3px rgba(255,255,255,.5);border:2px solid rgba(255,255,255,.7);overflow:hidden;position:relative}
+.func .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .func small{color:#6B7280;font-size:.76rem;display:block}.func .st{font-size:.72rem;font-weight:700;margin-top:.3rem;display:inline-block;padding:.15rem .5rem;border-radius:12px;background:#F3F4F6}
 .func.trab .st{background:#D1FAE5;color:#065F46}
 #plantao-feed,#acoes-reais{background:linear-gradient(180deg,#0F172A,#1E1B4B);color:#D1FAE5;border-radius:12px;padding:1rem;height:220px;overflow-y:auto;font-size:.82rem;font-family:Consolas,monospace;border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 4px 14px rgba(0,0,0,.5),0 10px 24px rgba(2,6,23,.3)}
@@ -475,10 +476,10 @@ const EQUIPE=[
 {n:'Aline Castro',s:'Social Media · Agendamento',c:'#EF4444',g:'F'},
 {n:'Renata Duarte',s:'Financeiro · Orçamentos',c:'#10B981',g:'F'},
 {n:'Sofia Mendes',s:'Pós-venda · Avaliações',c:'#6366F1',g:'F'},
-{n:'Helena Vasques',s:'🤖 Robô Financeira · Cobranças e Contas',c:'#DB2777',g:'F',robo:true},
-{n:'Vitória Lemos',s:'🤖 Guardiã do Plantão · Vigia 24h',c:'#F472B6',g:'F',robo:true},
-{n:'Lívia Andrade',s:'🤖 COO · Operação e Números',c:'#0EA5E9',g:'F',robo:true},
-{n:'Nina Cardoso',s:'🤖 CHRO · Pessoas e Harmonia',c:'#A855F7',g:'F',robo:true},
+{n:'Helena Vasques',s:'🤖 Robô Financeira · Cobranças e Contas',c:'#DB2777',g:'F',robo:true,foto:'https://randomuser.me/api/portraits/women/65.jpg'},
+{n:'Vitória Lemos',s:'🤖 Guardiã do Plantão · Vigia 24h',c:'#F472B6',g:'F',robo:true,foto:'https://randomuser.me/api/portraits/women/44.jpg'},
+{n:'Lívia Andrade',s:'🤖 COO · Operação e Números',c:'#0EA5E9',g:'F',robo:true,foto:'https://randomuser.me/api/portraits/women/68.jpg'},
+{n:'Nina Cardoso',s:'🤖 CHRO · Pessoas e Harmonia',c:'#A855F7',g:'F',robo:true,foto:'https://randomuser.me/api/portraits/women/26.jpg'},
 {n:'Thiago Martins',s:'Closer · Fechamento',c:'#1F2937',g:'M'},
 {n:'Diego Ferreira',s:'Dev Sites · Lojas Virtuais',c:'#2563EB',g:'M'},
 {n:'Lucas Almeida',s:'Editor Vídeo TikTok',c:'#7C3AED',g:'M'},
@@ -486,7 +487,7 @@ const EQUIPE=[
 {n:'Gabriel Santos',s:'Analista CRM · Relatórios',c:'#4B5563',g:'M'},
 {n:'Felipe Oliveira',s:'Expansão · Parcerias',c:'#65A30D',g:'M'}];
 EQUIPE.forEach(e=>e.feitos=0);
-function iniEq(){if(!DB.eq)DB.eq=EQUIPE.map(e=>({...e,feitos:0}));else EQUIPE.forEach(e=>{if(!DB.eq.find(x=>x.n===e.n))DB.eq.push({...e,feitos:0});});}
+function iniEq(){if(!DB.eq)DB.eq=EQUIPE.map(e=>({...e,feitos:0}));else EQUIPE.forEach(e=>{const x=DB.eq.find(y=>y.n===e.n);if(!x)DB.eq.push({...e,feitos:0});else{if(e.foto)x.foto=e.foto;if(e.robo!==undefined)x.robo=e.robo;x.s=e.s;}});}
 function neq(){return (DB.eq&&DB.eq.length)||EQUIPE.length;}
 // LEADS
 function abrirLead(id){document.getElementById('m-lead').classList.add('aberto');
@@ -529,7 +530,7 @@ const org={};at.forEach(l=>org[l.origem]=(org[l.origem]||0)+1);
 document.getElementById('r-total').textContent=at.length;document.getElementById('r-cli').textContent=c.cliente;
 document.getElementById('r-valor').textContent='R$ '+tot.toFixed(0);document.getElementById('r-conv').textContent=conv+'%';
 document.getElementById('r-orig').innerHTML=Object.entries(org).sort((a,b)=>b[1]-a[1]).map(o=>'<div>'+o[0]+': <b>'+o[1]+'</b></div>').join('')||'—';
-document.getElementById('grid-equipe').innerHTML=DB.eq.map((f,i)=>'<div class="func'+(plantaoOn?' trab':'')+'"><div class="av" style="background:'+f.c+'">'+f.n.split(' ').map(x=>x[0]).slice(0,2).join('')+'</div><b style="font-size:.85rem">'+f.n+'</b><small>'+f.s+' · '+(f.robo?'🤖':(f.g==='F'?'👩':'👨'))+'</small><br><span class="st">'+(plantaoOn?'🟢 em plantão':'⚪ standby')+' · '+f.feitos+' ações</span></div>').join('');
+document.getElementById('grid-equipe').innerHTML=DB.eq.map((f,i)=>{const ini=f.n.split(' ').map(x=>x[0]).slice(0,2).join('');const av=f.foto?'<span>'+ini+'</span><img loading="lazy" src="'+f.foto+'" alt="'+f.n+'" onload="this.previousElementSibling.style.display=\'none\'" onerror="this.remove()">':ini;return '<div class="func'+(plantaoOn?' trab':'')+'"><div class="av" style="background:'+f.c+'">'+av+'</div><b style="font-size:.85rem">'+f.n+'</b><small>'+f.s+' · '+(f.robo?'🤖':(f.g==='F'?'👩':'👨'))+'</small><br><span class="st">'+(plantaoOn?'🟢 em plantão':'⚪ standby')+' · '+f.feitos+' ações</span></div>';}).join('');
 updNot();calcOrc();try{renderSocial();}catch(e){}try{renderMetricas(7);}catch(e){}try{renderHist();}catch(e){}try{renderFin();}catch(e){}try{renderProj();}catch(e){}try{renderHier();}catch(e){}}
 function foneReal(l){return String(l.tel||'').replace(/\D/g,'').length>=8;}
 function card(l){const wa=foneReal(l)?'<a class="btn btn-wa" target="_blank" href="'+waLink(l.tel,'Olá '+l.nome+'! Sobre '+l.servico+' — vi seu contato e quero ajudar!')+'">WhatsApp</a><button class="btn btn-wa" onclick="evoSendLead('+l.id+')" title="Envio automático via API">⚡Auto</button>':'<button class="btn btn-v" onclick="abrirLead('+l.id+')" title="Complete o WhatsApp na ficha">📞 Completar fone</button>';return '<div class="lead" draggable="true" ondragstart="event.dataTransfer.setData(\'id\','+l.id+')"><b>'+l.nome+'</b>'+(foneReal(l)?'':' <span class="tag" style="background:#FEE2E2;color:#991B1B">sem fone</span>')+'<small>'+l.servico+' · '+l.origem+'</small><span class="tag">'+l.origem+'</span>'+(l.valor?'<span class="tag">R$ '+l.valor+'</span>':'')+'<div class="la">'+wa+'<button class="btn btn-v" onclick="abrirLead('+l.id+')">Ver</button><button class="btn btn-v" onclick="analisarLead('+l.id+')" title="Análise local do perfil">🔍 Análise</button><button class="btn btn-p" onclick="avancarEtapa('+l.id+')" title="Avançar etapa">➡️</button><button class="btn btn-x" onclick="delLead('+l.id+')">×</button></div></div>';}
