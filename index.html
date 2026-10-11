@@ -418,6 +418,26 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:16px;border:1px sol
 </div>
 <div id="tt-lista" style="margin-top:.5rem"></div>
 </div>
+<div class="panel" id="prev-fone">
+<h3>📱 Prévia no celular — Redmi Note 14 <span class="legend">(o app de verdade, ao vivo, dentro da moldura)</span></h3>
+<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start">
+<div id="redmi" style="width:300px;max-width:78vw;background:#0B0F1A;border-radius:42px;padding:12px;box-shadow:0 30px 60px rgba(2,6,23,.5),inset 0 2px 3px rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.6);position:relative;flex-shrink:0">
+<div style="position:absolute;right:-3px;top:110px;width:4px;height:56px;background:#1E293B;border-radius:2px"></div>
+<div style="position:absolute;right:-3px;top:176px;width:4px;height:90px;background:#1E293B;border-radius:2px"></div>
+<div id="redmi-tela" style="background:#000;border-radius:32px;overflow:hidden;position:relative">
+<div style="position:absolute;top:10px;left:0;right:0;z-index:2;display:flex;justify-content:center;pointer-events:none"><div style="width:14px;height:14px;border-radius:50%;background:#0B0F1A;border:2px solid #1E293B;box-shadow:inset 0 0 4px #000"></div></div>
+<div style="position:absolute;top:0;left:0;right:0;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:8px 18px 0;color:#fff;font-size:.7rem;font-weight:700;pointer-events:none;text-shadow:0 1px 3px #000"><span id="mi-hora">--:--</span><span>5G 📶 🔋</span></div>
+<iframe id="redmi-frame" title="prévia no celular" style="width:100%;height:560px;border:0;background:#fff;display:block"></iframe>
+</div>
+<div style="text-align:center;color:#94A3B8;font-size:.7rem;margin-top:.4rem">REDMI NOTE 14 · 6.67" AMOLED</div>
+</div>
+<div style="flex:1;min-width:220px"><p class="legend">Moldura fiel ao Redmi Note 14: tela 20:9, furo central da câmera, botões laterais e barra MIUI com a hora real. Toque e use — é o seu app rodando.</p>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem">
+<button class="btn btn-p" onclick="recarregarPrevia()">🔄 Recarregar prévia</button>
+<button class="btn btn-v" onclick="window.open(location.pathname,'_blank')">↗ Abrir em tela cheia</button>
+</div></div>
+</div>
+</div>
 <div class="panel">
 <button class="btn-g" style="margin-top:.2rem" onclick="salvarCfg()">💾 Salvar</button>
 <button class="btn btn-x" onclick="if(confirm('Apagar tudo?')){localStorage.removeItem(KEY);location.reload()}">🗑️ Apagar banco</button>
@@ -850,6 +870,9 @@ let deferred=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDef
 document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('.card,.func,canvas#bannerCanvas');document.querySelectorAll('.tilt-on').forEach(x=>{if(x!==t){x.classList.remove('tilt-on');x.style.transform='';}});
 if(!t)return;const r=t.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
 t.classList.add('tilt-on');t.style.transform='perspective(700px) rotateY('+(px*10)+'deg) rotateX('+(-py*10)+'deg) translateY(-4px)';});})();
+// 📱 PRÉVIA REDMI NOTE 14 — iframe do próprio app (?embed=1 esconde a moldura lá dentro, sem recursão)
+function recarregarPrevia(){const f=document.getElementById('redmi-frame');if(!f)return;const base=location.pathname.split('?')[0];f.src=base+'?embed=1&v='+Date.now();}
+(function(){try{if(location.search.indexOf('embed')>=0){const p=document.getElementById('prev-fone');if(p)p.style.display='none';}else{recarregarPrevia();const h=document.getElementById('mi-hora');if(h){const a=new Date();h.textContent=String(a.getHours()).padStart(2,'0')+':'+String(a.getMinutes()).padStart(2,'0');}}}catch(e){}})();
 function instalarApp(){if(deferred){deferred.prompt();}else alert('📱 No celular: menu ⋮ → “Instalar app / Adicionar à tela inicial”. No PC: ícone instalar na barra de endereço.');}
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 // INIT
