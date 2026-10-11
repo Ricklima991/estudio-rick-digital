@@ -379,6 +379,8 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:16px;border:1px sol
 <div id="sala-feed" style="background:#0F172A;color:#D1FAE5;border-radius:10px;padding:.9rem;height:260px;overflow-y:auto;font-size:.85rem;margin:.5rem 0">Sala vazia — abra uma reunião ou fale como CEO.</div>
 <div style="display:flex;gap:.5rem;flex-wrap:wrap"><input id="ceo-fala" placeholder='Fale como CEO (Enter envia)' style="flex:1;min-width:220px" onkeydown="if(event.key==='Enter')ceoFalar()">
 <button class="btn-g" style="background:#F59E0B" onclick="ceoFalar()">Enviar</button>
+<button class="btn btn-v" id="btn-voz" onclick="alternarVoz()">🔊 Voz: ON</button>
+<button class="btn btn-v" onclick="ouvirCEO()">🎤 Falar</button>
 <button class="btn-g" style="background:#059669" onclick="reuniaoDiretoria()">📋 Reunião agora</button></div></div>
 <div class="panel" style="border:2px solid #059669"><h3>📌 Mural do Dia — o mais importante de hoje</h3><div id="mural"></div></div>
 </div>
@@ -589,7 +591,7 @@ function roboFin(silencioso){iniFin();const hj=hojeKey();let cob=0,ven=0;
 (DB.projetos||[]).filter(p=>p.status!=='concluido'&&(!p.pago50||!p.pago100)).forEach(p=>{cob++;const t='💰 Cobrar projeto: '+p.nome+' ('+(!p.pago50?'50% ':'')+(!p.pago100?'100%':'')+')';if(!DB.tarefas.find(x=>!x.ok&&x.tit===t))DB.tarefas.push({id:Date.now()+Math.random(),tit:t,data:new Date(Date.now()+86400000).toISOString().slice(0,16),ok:false});});
 const t=finTotais();const res='Recebido '+brl(t.rec)+' · A receber '+brl(t.arec)+' · Contas pendentes '+brl(t.pagar)+' ('+ven+' vencidas) · '+cob+' projeto(s) p/ cobrar';
 acaoReal('🤖 Robô financeira auditou',res);if(ven)notif('💸 Helena: '+ven+' conta(s) vencidas','Ver Financeiro → Contas a pagar');
-if(!silencioso){save();alert('🤖 Helena auditou:\n'+res);}return res;}
+if(!silencioso){save();try{falarQuem('HELENA','Auditoria pronta. '+res);}catch(e){}alert('🤖 Helena auditou:\n'+res);}return res;}
 // 🧠 CÉREBROS DA DIRETORIA (lógica local sobre seus dados reais — não é IA externa)
 function cooJogada(){iniFin();const t=finTotais();const at=DB.leads.filter(l=>l.etapa!=='arquivado');
 const dev=DB.projetos.filter(p=>p.status!=='concluido'&&(!p.pago50||!p.pago100)).sort((a,b)=>b.valor-a.valor)[0];
@@ -613,8 +615,22 @@ return {t,total:at.length,cli,quentes:at.filter(l=>l.etapa==='quente').length};}
 function cooFala(){const n=numerosResumo();return 'Números na mesa: '+brl(n.t.rec)+' recebido · '+brl(n.t.arec)+' a receber · '+brl(n.t.pagar)+' a pagar · funil com '+n.total+' leads ('+n.quentes+' quentes, '+n.cli+' clientes).';}
 function chroFala(){const pend=DB.tarefas.filter(t=>!t.ok).length;return 'Time: '+neq()+' em campo · '+pend+' tarefa(s) pendente(s) · harmonia '+(document.getElementById('harmonia-status')?.textContent||'—')+'.';}
 function ceoFalar(){const i=document.getElementById('ceo-fala');const t=(i.value||'').trim();if(!t)return;i.value='';salaPush('CEO',t);
-setTimeout(()=>salaPush('COO','Entendido, CEO. '+cooFala()),900);setTimeout(()=>salaPush('CHRO','Fechado, CEO. '+chroFala()+' Já distribuo.'),1900);save();}
-function reuniaoDiretoria(){const n=numerosResumo();const j=cooJogada();
+setTimeout(()=>{salaPush('COO','Entendido, CEO. '+cooFala());falarQuem('COO','Entendido, CEO. '+cooFala());},900);setTimeout(()=>{salaPush('CHRO','Fechado, CEO. '+chroFala()+' Já distribuo.');falarQuem('CHRO','Fechado, CEO. Já distribuo.');},1900);save();}
+function reuniaoDiretoria(){const j=cooJogada();pararVoz();
+salaPush('CEO','Reunião aberta. Quero números, time e a próxima jogada. (auto)');
+setTimeout(()=>{salaPush('COO',cooFala()+' Proponho: '+j.t+'.');falarQuem('COO',cooFala()+' Proponho: '+j.t);},900);
+setTimeout(()=>{salaPush('CHRO',chroFala()+' Apoio a jogada da Lívia e assumo o acompanhamento.');falarQuem('CHRO','Apoio a jogada da Lívia e assumo o acompanhamento.');},1900);
+setTimeout(()=>{salaPush('COO','Combinado com a Nina. Executando: '+j.t+'.');falarQuem('COO','Combinado. Executando: '+j.t);try{j.fn();}catch(e){}acaoReal('📋 Reunião da diretoria','Pauta executada: '+j.t);save();},3000);}
+// 🔊 VOZES — fala do próprio aparelho (Web Speech, grátis). Cada uma com timbre próprio.
+let vozOn=true;const TIMBRE={COO:{p:.85,r:.95,i:0},CHRO:{p:1.3,r:1.05,i:1},HELENA:{p:1.1,r:1,i:2},VITORIA:{p:1.15,r:.98,i:3}};
+function vozDe(i){try{const v=speechSynthesis.getVoices();const br=v.filter(x=>x.lang&&x.lang.toLowerCase().indexOf('pt')===0);const lista=br.length?br:v;return lista.length?lista[i%lista.length]:null;}catch(e){return null;}}
+function falarQuem(de,txt){if(!vozOn)return;try{if(!('speechSynthesis' in window))return;const t=TIMBRE[de]||{p:1,r:1,i:0};
+const u=new SpeechSynthesisUtterance(txt);u.lang='pt-BR';u.pitch=t.p;u.rate=t.r;const v=vozDe(t.i);if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+function pararVoz(){try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}}
+function alternarVoz(){vozOn=!vozOn;if(!vozOn)pararVoz();document.getElementById('btn-voz').textContent=vozOn?'🔊 Voz: ON':'🔇 Voz: OFF';}
+function ouvirCEO(){try{const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return alert('Este navegador não tem ditado por voz — use o Chrome.');const r=new R();r.lang='pt-BR';
+r.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById('ceo-fala').value=t;ceoFalar();};r.onerror=()=>alert('Não ouvi — cheque o microfone.');r.start();}catch(e){alert('Microfone indisponível aqui — use o link publicado (https).');}}
+if('speechSynthesis' in window){try{speechSynthesis.getVoices();}catch(e){}}
 salaPush('CEO','Reunião aberta. Quero números, time e a próxima jogada. (auto)');
 setTimeout(()=>salaPush('COO',cooFala()+' Proponho: '+j.t+'.'),900);
 setTimeout(()=>salaPush('CHRO',chroFala()+' Apoio a jogada da Lívia e assumo o acompanhamento.'),1900);
