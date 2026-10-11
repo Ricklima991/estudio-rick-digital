@@ -92,7 +92,7 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 <a href="#" data-aba="proj">📁 <span>Projetos</span></a>
 <a href="#" data-aba="tarefas">⏰ <span>Tarefas</span></a>
 <a href="#" data-aba="rel">📋 <span>Relatórios</span></a>
-<a href="#" data-aba="equipe">🤖 <span>Equipe 15 + Plantão</span></a>
+<a href="#" data-aba="equipe">🤖 <span>Equipe 16 + Plantão</span></a>
 <a href="#" data-aba="config">⚙️ <span>Configurações</span></a>
 </nav></aside>
 <main>
@@ -249,7 +249,7 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 </div>
 <!-- FINANCEIRO -->
 <div id="aba-fin" class="aba">
-<div class="topo"><div><h1>💸 Financeiro</h1><p class="legend">O que entra (projetos) e o que sai (contas a pagar)</p></div></div>
+<div class="topo"><div><h1>💸 Financeiro</h1><p class="legend">O que entra (projetos) e o que sai (contas a pagar)</p></div><button class="btn-g" style="background:#DB2777" onclick="roboFin(false)">🤖 Rodar robô financeira</button></div>
 <div class="cards" style="grid-template-columns:repeat(3,1fr)"><div class="card" style="border-color:var(--s)"><div>✅ Recebido</div><div class="v" id="f-rec">R$ 0</div><small>50% entradas + 100% conclusões</small></div>
 <div class="card" style="border-color:var(--a)"><div>⏳ A receber</div><div class="v" id="f-arec">R$ 0</div><small>restantes de projetos abertos</small></div>
 <div class="card" style="border-color:var(--d)"><div>🧾 Contas a pagar</div><div class="v" id="f-pagar">R$ 0</div><small>pendentes</small></div></div>
@@ -290,13 +290,13 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 </div>
 <!-- EQUIPE -->
 <div id="aba-equipe" class="aba">
-<h1>🤖 Equipe IA — 15 funcionários <span class="legend">9 mulheres · 6 homens</span></h1>
+<h1>🤖 Equipe IA — 16 funcionários <span class="legend">10 mulheres · 6 homens</span></h1>
 <div class="panel" style="border:2px solid #2563EB">
-<h3><span class="live-dot" id="liveDot"></span>🔴 Plantão AO VIVO — os 15 trabalhando sob seu comando</h3>
+<h3><span class="live-dot" id="liveDot"></span>🔴 Plantão AO VIVO — os 16 trabalhando sob seu comando</h3>
 <p class="legend">Plantão: <b id="plantao-st">desligado</b> · Ligue o plantão: a equipe trabalha na SUA fila real (qualifica, cobra, gera banner, relata) — nunca inventa lead nem telefone. Postagem final nas redes pede 1 clique seu.</p>
 <div style="display:flex;gap:.6rem;margin:.8rem 0;flex-wrap:wrap">
 <button class="btn-g" id="btn-plantao" onclick="togglePlantao()">▶️ Ligar plantão</button>
-<input id="ordem" placeholder='Ordem do CEO: "relatório" / "encher a fila" / "banner" / "cobrar leads"' style="flex:1;min-width:220px">
+<input id="ordem" placeholder='Ordem do CEO: "relatório" / "encher a fila" / "banner" / "financeiro" / "cobrar leads"' style="flex:1;min-width:220px">
 <button class="btn-g" style="background:#059669" onclick="enviarOrdem()">Enviar ordem</button>
 </div>
 <label class="legend">⚙️ Ações reais executadas (com prova) — aqui só entra o que REALMENTE aconteceu: envio via API, fila cheia, relatório. Com plantão ligado, a equipe trabalha de verdade a cada 25s.</label>
@@ -305,8 +305,8 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:12px;border:1px sol
 <div id="plantao-feed" style="margin-top:.4rem">Plantão desligado.</div>
 </div>
 <div class="panel" style="border:2px solid #7C3AED">
-<h3>📢 Comunicados do CEO — os 15 leem e confirmam</h3>
-<p class="legend">Publique uma ordem ou aviso. Os 15 leem em cadeia, confirmam com horário e comentam entre si no rádio — você acompanha quem já leu (x/15) com barra de harmonia.</p>
+<h3>📢 Comunicados do CEO — os 16 leem e confirmam</h3>
+<p class="legend">Publique uma ordem ou aviso. Os 16 leem em cadeia, confirmam com horário e comentam entre si no rádio — você acompanha quem já leu (x/16) com barra de harmonia.</p>
 <div style="display:flex;gap:.5rem;margin:.6rem 0;flex-wrap:wrap">
 <input id="comunicado-txt" placeholder='Ex: "Hoje o foco é loja virtual — responder em até 1h"' style="flex:1;min-width:220px" onkeydown="if(event.key==='Enter')publicarComunicado()">
 <button class="btn-g" style="background:#7C3AED" onclick="publicarComunicado()">📢 Publicar</button>
@@ -429,6 +429,7 @@ const EQUIPE=[
 {n:'Aline Castro',s:'Social Media · Agendamento',c:'#EF4444',g:'F'},
 {n:'Renata Duarte',s:'Financeiro · Orçamentos',c:'#10B981',g:'F'},
 {n:'Sofia Mendes',s:'Pós-venda · Avaliações',c:'#6366F1',g:'F'},
+{n:'Helena Vasques',s:'🤖 Robô Financeira · Cobranças e Contas',c:'#DB2777',g:'F',robo:true},
 {n:'Thiago Martins',s:'Closer · Fechamento',c:'#1F2937',g:'M'},
 {n:'Diego Ferreira',s:'Dev Sites · Lojas Virtuais',c:'#2563EB',g:'M'},
 {n:'Lucas Almeida',s:'Editor Vídeo TikTok',c:'#7C3AED',g:'M'},
@@ -436,7 +437,8 @@ const EQUIPE=[
 {n:'Gabriel Santos',s:'Analista CRM · Relatórios',c:'#4B5563',g:'M'},
 {n:'Felipe Oliveira',s:'Expansão · Parcerias',c:'#65A30D',g:'M'}];
 EQUIPE.forEach(e=>e.feitos=0);
-function iniEq(){if(!DB.eq)DB.eq=EQUIPE.map(e=>({...e,feitos:0}));}
+function iniEq(){if(!DB.eq)DB.eq=EQUIPE.map(e=>({...e,feitos:0}));else EQUIPE.forEach(e=>{if(!DB.eq.find(x=>x.n===e.n))DB.eq.push({...e,feitos:0});});}
+function neq(){return (DB.eq&&DB.eq.length)||EQUIPE.length;}
 // LEADS
 function abrirLead(id){document.getElementById('m-lead').classList.add('aberto');
 if(id){const l=DB.leads.find(x=>x.id===id);document.getElementById('m-lead-t').textContent='Editar — '+l.nome;
@@ -478,7 +480,7 @@ const org={};at.forEach(l=>org[l.origem]=(org[l.origem]||0)+1);
 document.getElementById('r-total').textContent=at.length;document.getElementById('r-cli').textContent=c.cliente;
 document.getElementById('r-valor').textContent='R$ '+tot.toFixed(0);document.getElementById('r-conv').textContent=conv+'%';
 document.getElementById('r-orig').innerHTML=Object.entries(org).sort((a,b)=>b[1]-a[1]).map(o=>'<div>'+o[0]+': <b>'+o[1]+'</b></div>').join('')||'—';
-document.getElementById('grid-equipe').innerHTML=DB.eq.map((f,i)=>'<div class="func'+(plantaoOn?' trab':'')+'"><div class="av" style="background:'+f.c+'">'+f.n.split(' ').map(x=>x[0]).slice(0,2).join('')+'</div><b style="font-size:.85rem">'+f.n+'</b><small>'+f.s+' · '+(f.g==='F'?'👩':'👨')+'</small><br><span class="st">'+(plantaoOn?'🟢 em plantão':'⚪ standby')+' · '+f.feitos+' ações</span></div>').join('');
+document.getElementById('grid-equipe').innerHTML=DB.eq.map((f,i)=>'<div class="func'+(plantaoOn?' trab':'')+'"><div class="av" style="background:'+f.c+'">'+f.n.split(' ').map(x=>x[0]).slice(0,2).join('')+'</div><b style="font-size:.85rem">'+f.n+'</b><small>'+f.s+' · '+(f.robo?'🤖':(f.g==='F'?'👩':'👨'))+'</small><br><span class="st">'+(plantaoOn?'🟢 em plantão':'⚪ standby')+' · '+f.feitos+' ações</span></div>').join('');
 updNot();calcOrc();try{renderSocial();}catch(e){}try{renderMetricas(7);}catch(e){}try{renderHist();}catch(e){}try{renderFin();}catch(e){}try{renderProj();}catch(e){}}
 function foneReal(l){return String(l.tel||'').replace(/\D/g,'').length>=8;}
 function card(l){const wa=foneReal(l)?'<a class="btn btn-wa" target="_blank" href="'+waLink(l.tel,'Olá '+l.nome+'! Sobre '+l.servico+' — vi seu contato e quero ajudar!')+'">WhatsApp</a><button class="btn btn-wa" onclick="evoSendLead('+l.id+')" title="Envio automático via API">⚡Auto</button>':'<button class="btn btn-v" onclick="abrirLead('+l.id+')" title="Complete o WhatsApp na ficha">📞 Completar fone</button>';return '<div class="lead" draggable="true" ondragstart="event.dataTransfer.setData(\'id\','+l.id+')"><b>'+l.nome+'</b>'+(foneReal(l)?'':' <span class="tag" style="background:#FEE2E2;color:#991B1B">sem fone</span>')+'<small>'+l.servico+' · '+l.origem+'</small><span class="tag">'+l.origem+'</span>'+(l.valor?'<span class="tag">R$ '+l.valor+'</span>':'')+'<div class="la">'+wa+'<button class="btn btn-v" onclick="abrirLead('+l.id+')">Ver</button><button class="btn btn-v" onclick="analisarLead('+l.id+')" title="Análise local do perfil">🔍 Análise</button><button class="btn btn-p" onclick="avancarEtapa('+l.id+')" title="Avançar etapa">➡️</button><button class="btn btn-x" onclick="delLead('+l.id+')">×</button></div></div>';}
@@ -531,6 +533,13 @@ function projPagar(id,q){const p=DB.projetos.find(x=>x.id===id);if(!p)return;if(
 function projConcluir(id){const p=DB.projetos.find(x=>x.id===id);if(!p)return;p.status='concluido';p.pago100=true;save();notif('✅ Projeto concluído: '+p.nome,'100% recebido');acaoReal('✅ Projeto concluído',p.nome+' — 100% recebido '+brl(p.valor));}
 function projReabrir(id){DB.projetos.find(x=>x.id===id).status='andamento';save();}
 function delProj(id){if(confirm('Excluir projeto?')){DB.projetos=DB.projetos.filter(p=>p.id!==id);save();}}
+// 🤖 ROBÔ FINANCEIRA (Helena) — audita contas e recebíveis na hora, sem inventar nada
+function roboFin(silencioso){iniFin();const hj=hojeKey();let cob=0,ven=0;
+(DB.contas||[]).filter(c=>!c.paga&&c.venc&&c.venc<=hj).forEach(c=>{ven++;const t='💸 Pagar: '+c.desc+' ('+brl(c.valor)+')';if(!DB.tarefas.find(x=>!x.ok&&x.tit===t))DB.tarefas.push({id:Date.now()+Math.random(),tit:t,data:c.venc+'T09:00',ok:false});});
+(DB.projetos||[]).filter(p=>p.status!=='concluido'&&(!p.pago50||!p.pago100)).forEach(p=>{cob++;const t='💰 Cobrar projeto: '+p.nome+' ('+(!p.pago50?'50% ':'')+(!p.pago100?'100%':'')+')';if(!DB.tarefas.find(x=>!x.ok&&x.tit===t))DB.tarefas.push({id:Date.now()+Math.random(),tit:t,data:new Date(Date.now()+86400000).toISOString().slice(0,16),ok:false});});
+const t=finTotais();const res='Recebido '+brl(t.rec)+' · A receber '+brl(t.arec)+' · Contas pendentes '+brl(t.pagar)+' ('+ven+' vencidas) · '+cob+' projeto(s) p/ cobrar';
+acaoReal('🤖 Robô financeira auditou',res);if(ven)notif('💸 Helena: '+ven+' conta(s) vencidas','Ver Financeiro → Contas a pagar');
+if(!silencioso){save();alert('🤖 Helena auditou:\n'+res);}return res;}
 function copiarTexto(t){navigator.clipboard.writeText(t).then(()=>alert('✅ Copiado!'));}
 function copiarCodigo(){copiarTexto('<form id=cap><input name=nome required placeholder=Seu nome><input name=tel required placeholder=WhatsApp><button>Quero orçamento grátis</button></form><p>Resposta em: '+DB.cfg.wa+'</p>');}
 function salvarCfg(){DB.cfg={marca:document.getElementById('cfg-marca').value,wa:document.getElementById('cfg-wa').value,tk:document.getElementById('cfg-tk').value,pf:document.getElementById('cfg-pf').value,num:document.getElementById('cfg-num').value,cloud:document.getElementById('cfg-cloud').value.trim().replace(/\/$/,''),evo:document.getElementById('cfg-evo').value.trim().replace(/\/$/,''),evokey:document.getElementById('cfg-evokey').value.trim(),evoinst:document.getElementById('cfg-evoinst').value.trim()||'rick-digital',evomsq:document.getElementById('cfg-evomsq').value,ttuser:document.getElementById('cfg-ttuser').value,ttagenda:document.getElementById('cfg-ttagenda').value};save();alert('✅ Salvo! Nuvem: '+(DB.cfg.cloud||'não configurada')+' · WhatsApp auto: '+((DB.cfg.evo&&DB.cfg.evokey)?'ON':'off (manual)'));}
@@ -665,47 +674,48 @@ let plantaoOn=false,plantaoTimer=null,realTimer=null,tick=0;
 const NOMES=['Maria Silva','João Pereira','Carla Mendes','Carlos Costa','Ana Clara','Paulo Souza','Juliana Castro','Marcos Lima','Fernanda Rocha','Lucas Pinto'];
 function togglePlantao(){plantaoOn=!plantaoOn;document.getElementById('plantao-st').textContent=plantaoOn?'LIGADO 🟢':'desligado';
 document.getElementById('liveDot').classList.toggle('on',plantaoOn);document.getElementById('btn-plantao').textContent=plantaoOn?'⏸️ Desligar plantão':'▶️ Ligar plantão';
-feed(plantaoOn?'🟢 <b>Plantão ligado!</b> 15 funcionários em ação.':'⚪ Plantão desligado.');
+feed(plantaoOn?'🟢 <b>Plantão ligado!</b> '+neq()+' funcionários em ação.':'⚪ Plantão desligado.');
 if(plantaoOn){plantaoTimer=setInterval(tickPlantao,4000);realTimer=setInterval(acaoAuto,25000);}else{clearInterval(plantaoTimer);clearInterval(realTimer);}render();}
 function feed(h){const f=document.getElementById('plantao-feed');if(f.innerHTML.includes('desligado'))f.innerHTML='';f.innerHTML='<div style="margin:.25rem 0">'+new Date().toLocaleTimeString('pt-BR')+' — '+h+'</div>'+f.innerHTML;}
 function acaoReal(t,d){if(!DB.acoes)DB.acoes=[];DB.acoes.unshift({t,d,quando:new Date().toLocaleString('pt-BR'),ts:Date.now()});DB.acoes=DB.acoes.slice(0,100);localStorage.setItem(KEY,JSON.stringify(DB));
 document.getElementById('acoes-reais').innerHTML=DB.acoes.slice(0,10).map(a=>'<div style="margin:.3rem 0"><span class="feed-ok">✔ '+a.quando+'</span> — <b>'+a.t+'</b><br><span class="feed-info">'+a.d+'</span></div>').join('');}
 function tickPlantao(){tick++;const f=DB.eq[Math.floor(Math.random()*DB.eq.length)];f.feitos++;
-const roda=tick%5;
+const roda=tick%6;
 // MODO REAL: só mexe na SUA fila de verdade — nunca inventa lead/telefone.
 if(roda===0){const c=DB.leads.find(l=>l.etapa==='novo'||l.etapa==='qualificacao');if(c){c.etapa=c.etapa==='novo'?'qualificacao':'quente';feed('🔥 <b>'+f.n+'</b> ('+f.s+') qualificou <b>'+c.nome+'</b> → '+c.etapa.toUpperCase()+' (fila real)');}else if(autoLeads.length){const a=autoLeads.shift();DB.leads.unshift({id:Date.now(),nome:a.nome,tel:a.fone||'',origem:'Automação 🤖 '+(a.cidade||''),servico:'Site Institucional',valor:997,etapa:'novo',obs:'Da varredura '+(a.varredura||'')+' — validar antes de abordar',data:new Date().toLocaleString('pt-BR')});feed('🤖 <b>'+f.n+'</b> puxou <b>'+a.nome+'</b> da varredura → funil NOVO');}else feed('📞 <b>'+f.n+'</b> revisou fila (nada p/ mover — rode a varredura)');}
 else if(roda===1){const c=DB.leads.find(l=>l.etapa==='novo'||l.etapa==='qualificacao');if(c){c.etapa=c.etapa==='novo'?'qualificacao':'quente';feed('🔥 <b>'+f.n+'</b> qualificou <b>'+c.nome+'</b> → '+c.etapa.toUpperCase());}else feed('📞 <b>'+f.n+'</b> revisou fila (sem leads p/ mover)');}
 else if(roda===2){desenharBanner();feed('🎨 <b>'+f.n+'</b> gerou banner na Fábrica (prévia atualizada)');}
 else if(roda===3){DB.tarefas.push({id:Date.now(),tit:'Follow-up plantão: '+f.n,data:new Date(Date.now()+86400000).toISOString().slice(0,16),ok:false});feed('⏰ <b>'+f.n+'</b> criou lembrete de retorno 24h');}
+else if(roda===5){const h=DB.eq.find(x=>x.robo)||f;h.feitos=(h.feitos||0)+1;const r=roboFin(true);feed('🤖 <b>'+h.n+'</b> auditou o financeiro: '+r);}
 else{feed('📊 <b>'+f.n+'</b> atualizou métricas — conversão recalculada');}
-lerComunicados(f);const f2=DB.eq[Math.floor(Math.random()*DB.eq.length)];if(f2!==f)lerComunicados(f2);if(tick%2===0){const prox=DB.eq[(DB.eq.indexOf(f)+1)%DB.eq.length];postRadio('👷 '+f.n,'👷 '+prox.n,HANDOFF[roda%HANDOFF.length]);}else{const a=DB.eq[Math.floor(Math.random()*15)],b=DB.eq[Math.floor(Math.random()*15)];if(a!==b&&DB.radio.length<78)conversaEspontanea(a,b);}
+lerComunicados(f);const f2=DB.eq[Math.floor(Math.random()*DB.eq.length)];if(f2!==f)lerComunicados(f2);if(tick%2===0){const prox=DB.eq[(DB.eq.indexOf(f)+1)%DB.eq.length];postRadio('👷 '+f.n,'👷 '+prox.n,HANDOFF[roda%HANDOFF.length]);}else{const a=DB.eq[Math.floor(Math.random()*DB.eq.length)],b=DB.eq[Math.floor(Math.random()*DB.eq.length)];if(a!==b&&DB.radio.length<78)conversaEspontanea(a,b);}
 notif('⚙️ Plantão: '+f.n,f.s);localStorage.setItem(KEY,JSON.stringify(DB));render();
 document.getElementById('plantao-feed').innerHTML=document.getElementById('plantao-feed').innerHTML;updNot();}
 function acaoAuto(){const total=DB.leads.filter(l=>l.etapa!=='arquivado').length;acaoReal('🤖 Plantão executou ciclo 25s','Fila com '+total+' leads · conversão '+document.getElementById('c-conv').textContent+' (prova: banco local '+DB.leads.length+' registros)');}
 // 📢💬 COMUNICAÇÃO INTERNA — comunicados, leitura em cadeia e rádio da equipe (harmonia)
 function iniSocial(){if(!DB.comunicados)DB.comunicados=[];if(!DB.radio)DB.radio=[];}
-function publicarComunicado(){const t=document.getElementById('comunicado-txt').value.trim();if(!t)return alert('Escreva o comunicado');const c={id:Date.now(),texto:t,quando:new Date().toLocaleString('pt-BR'),lidas:[]};DB.comunicados.unshift(c);DB.comunicados=DB.comunicados.slice(0,10);document.getElementById('comunicado-txt').value='';postRadio('🧑‍💼 CEO','📢 Todos os 15','COMUNICADO: '+t);feed('🧑‍💼 CEO publicou comunicado para os 15 — leitura em cadeia iniciada');save();renderSocial();leituraEmCadeia(c.id);}
+function publicarComunicado(){const t=document.getElementById('comunicado-txt').value.trim();if(!t)return alert('Escreva o comunicado');const c={id:Date.now(),texto:t,quando:new Date().toLocaleString('pt-BR'),lidas:[]};DB.comunicados.unshift(c);DB.comunicados=DB.comunicados.slice(0,10);document.getElementById('comunicado-txt').value='';postRadio('🧑‍💼 CEO','📢 Todos os '+neq()+'','COMUNICADO: '+t);feed('🧑‍💼 CEO publicou comunicado para os '+neq()+' — leitura em cadeia iniciada');save();renderSocial();leituraEmCadeia(c.id);}
 function postRadio(de,para,texto){iniSocial();DB.radio.unshift({id:Date.now()+Math.random(),de,para,texto,quando:new Date().toLocaleTimeString('pt-BR')});DB.radio=DB.radio.slice(0,80);localStorage.setItem(KEY,JSON.stringify(DB));renderSocial();}
 function renderSocial(){iniSocial();
 const lc=document.getElementById('lista-comunicados');
-if(lc){lc.innerHTML=DB.comunicados.slice(0,5).map(c=>{const pct=Math.round(c.lidas.length/15*100);return '<div style="padding:.6rem;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:.5rem"><b>📢 '+c.texto+'</b><br><small>'+c.quando+' · <b>'+c.lidas.length+'/15 leram ('+pct+'%)</b></small><div style="background:#E5E7EB;border-radius:6px;height:8px;overflow:hidden;margin:.35rem 0"><div style="height:100%;width:'+pct+'%;background:'+(pct===100?'#059669':'#7C3AED')+'"></div></div>'+(c.lidas.length?'<small style="color:#059669">✓ '+c.lidas.map(l=>l.nome.split(' ')[0]+' '+l.quando).join(' · ')+'</small>':'<small style="color:#92400E">aguardando leitura — ligue o plantão ou aguarde a cadeia…</small>')+'</div>';}).join('')||'<p class="legend">Nenhum comunicado ainda. Publique o primeiro para alinhar os 15.</p>';}
+if(lc){lc.innerHTML=DB.comunicados.slice(0,5).map(c=>{const pct=Math.round(c.lidas.length/neq()*100);return '<div style="padding:.6rem;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:.5rem"><b>📢 '+c.texto+'</b><br><small>'+c.quando+' · <b>'+c.lidas.length+'/'+neq()+' leram ('+pct+'%)</b></small><div style="background:#E5E7EB;border-radius:6px;height:8px;overflow:hidden;margin:.35rem 0"><div style="height:100%;width:'+pct+'%;background:'+(pct===100?'#059669':'#7C3AED')+'"></div></div>'+(c.lidas.length?'<small style="color:#059669">✓ '+c.lidas.map(l=>l.nome.split(' ')[0]+' '+l.quando).join(' · ')+'</small>':'<small style="color:#92400E">aguardando leitura — ligue o plantão ou aguarde a cadeia…</small>')+'</div>';}).join('')||'<p class="legend">Nenhum comunicado ainda. Publique o primeiro para alinhar os '+neq()+'. Para ler, ligue o plantão ou aguarde a cadeia…</p>';}
 const rf=document.getElementById('radio-feed');
 if(rf){rf.innerHTML=DB.radio.slice(0,25).map(m=>'<div style="margin:.3rem 0"><span style="color:#93C5FD">'+m.quando+'</span> <b>'+m.de+'</b> → <b>'+m.para+'</b>: '+m.texto+'</div>').join('')||'Rádio silenciosa — ligue o plantão ou rode uma operação.';}
 atualizaHarmonia();}
-function atualizaHarmonia(){const el=document.getElementById('harmonia-status');if(!el)return;iniSocial();if(!DB.comunicados.length){el.textContent='Harmonia: sem comunicados — publique para alinhar.';return;}const c=DB.comunicados[0];const pct=Math.round(c.lidas.length/15*100);if(pct===100)el.textContent='Harmonia: ✅ 15/15 alinhados — “'+c.texto.slice(0,50)+'”';else el.textContent='Harmonia: '+c.lidas.length+'/15 leram ('+pct+'%) — cadeia em andamento…';}
+function atualizaHarmonia(){const el=document.getElementById('harmonia-status');if(!el)return;iniSocial();if(!DB.comunicados.length){el.textContent='Harmonia: sem comunicados — publique para alinhar.';return;}const c=DB.comunicados[0];const pct=Math.round(c.lidas.length/neq()*100);if(pct===100)el.textContent='Harmonia: ✅ '+neq()+'/'+neq()+' alinhados — “'+c.texto.slice(0,50)+'”';else el.textContent='Harmonia: '+c.lidas.length+'/'+neq()+' leram ('+pct+'%) — cadeia em andamento…';}
 const HANDOFF=['recebido, já estou qualificando e passo adiante','pode preparar a proposta que eu sustento o argumento','material pronto, pode legendar e agendar','follow-up agendado, assume o retorno com o cliente','métricas conferidas, fila sob controle, segue o jogo'];
 const CONVERSAS=['entendido, assumo daqui 👍','fechado, já estou executando','precisa de ajuda? estou livre e apoio','alinhei aqui, pode passar o bastão','confere minha parte e segue o fluxo 🤝','li o comunicado do CEO, estamos juntos'];
-function lerComunicados(f,forcar){iniSocial();const pend=DB.comunicados.filter(c=>!c.lidas.find(l=>l.nome===f.n));if(!pend.length)return false;const c=forcar?pend[pend.length-1]:pend[0];c.lidas.push({nome:f.n,quando:new Date().toLocaleTimeString('pt-BR')});feed('📖 <b>'+f.n+'</b> leu o comunicado ('+c.lidas.length+'/15): “'+c.texto.slice(0,45)+'…”');if(c.lidas.length%3===0)postRadio('👷 '+f.n,'📢 Todos','li o comunicado ('+c.lidas.length+'/15) — estamos alinhados ✅');if(c.lidas.length===15){acaoReal('📢 Comunicado 100% lido','“'+c.texto.slice(0,60)+'” — os 15 confirmaram em harmonia');postRadio('📢 Todos os 15','🧑‍💼 CEO','COMUNICADO ENTENDIDO ✅ — equipe em harmonia');feed('🤝 <b>Harmonia total!</b> Os 15 leram e estão alinhados.');}localStorage.setItem(KEY,JSON.stringify(DB));renderSocial();return true;}
+function lerComunicados(f,forcar){iniSocial();const pend=DB.comunicados.filter(c=>!c.lidas.find(l=>l.nome===f.n));if(!pend.length)return false;const c=forcar?pend[pend.length-1]:pend[0];c.lidas.push({nome:f.n,quando:new Date().toLocaleTimeString('pt-BR')});feed('📖 <b>'+f.n+'</b> leu o comunicado ('+c.lidas.length+'/'+neq()+'): “'+c.texto.slice(0,45)+'…”');if(c.lidas.length%3===0)postRadio('👷 '+f.n,'📢 Todos','li o comunicado ('+c.lidas.length+'/'+neq()+') — estamos alinhados ✅');if(c.lidas.length===neq()){acaoReal('📢 Comunicado 100% lido','“'+c.texto.slice(0,60)+'” — os '+neq()+' confirmaram em harmonia');postRadio('📢 Todos os '+neq()+'','🧑‍💼 CEO','COMUNICADO ENTENDIDO ✅ — equipe em harmonia');feed('🤝 <b>Harmonia total!</b> Os '+neq()+' leram e estão alinhados.');}localStorage.setItem(KEY,JSON.stringify(DB));renderSocial();return true;}
 let cadeiaRodando=false;
 function leituraEmCadeia(id){iniSocial();if(cadeiaRodando)return;const c=DB.comunicados.find(x=>x.id===id)||DB.comunicados[0];if(!c)return;cadeiaRodando=true;let i=0;
-(function passo(){const faltam=DB.eq.filter(f=>!c.lidas.find(l=>l.nome===f.n));if(!faltam.length||i>=15){cadeiaRodando=false;renderSocial();return;}
+(function passo(){const faltam=DB.eq.filter(f=>!c.lidas.find(l=>l.nome===f.n));if(!faltam.length||i>=neq()){cadeiaRodando=false;renderSocial();return;}
 const f=faltam[0];f.feitos=(f.feitos||0)+1;lerComunicados(f,true);
 const prox=faltam[1];if(prox)postRadio('👷 '+f.n,'👷 '+prox.n,'li e repasso o comunicado — “'+c.texto.slice(0,35)+'…” '+CONVERSAS[i%CONVERSAS.length]);
 save();i++;setTimeout(passo,900);})();}
 function conversaEspontanea(a,b){const temas=['fila sob controle, seguimos 🤝','banner da vez ficou pronto 🎨','acabei de qualificar, pode avançar 🔥','retorno de hoje agendado ⏰','métricas conferidas 📊','TikTok @ricklima991 atualizado 🎵'];const t=temas[Math.floor(Math.random()*temas.length)];postRadio('👷 '+a.n,'👷 '+b.n,t);}
-function sincronizarHarmonia(){iniSocial();if(!DB.comunicados.length){alert('Publique um comunicado primeiro — depois sincronize.');return;}const c=DB.comunicados[0];feed('🤝 <b>CEO pediu sincronia total</b> — os 15 vão confirmar leitura e se alinhar no rádio');postRadio('🧑‍💼 CEO','📢 Todos os 15','SINCRONIZAR HARMONIA AGORA — confirmem leitura e posição');leituraEmCadeia(c.id);
-setTimeout(()=>{const a=DB.eq[Math.floor(Math.random()*15)],b=DB.eq[Math.floor(Math.random()*15)];if(a!==b)conversaEspontanea(a,b);},2500);
-setTimeout(()=>{acaoReal('🤝 Harmonia sincronizada','Cheque '+c.lidas.length+'/15 leituras + rádio em cadeia');save();},6000);}
+function sincronizarHarmonia(){iniSocial();if(!DB.comunicados.length){alert('Publique um comunicado primeiro — depois sincronize.');return;}const c=DB.comunicados[0];feed('🤝 <b>CEO pediu sincronia total</b> — os '+neq()+' vão confirmar leitura e se alinhar no rádio');postRadio('🧑‍💼 CEO','📢 Todos os '+neq()+'','SINCRONIZAR HARMONIA AGORA — confirmem leitura e posição');leituraEmCadeia(c.id);
+setTimeout(()=>{const a=DB.eq[Math.floor(Math.random()*DB.eq.length)],b=DB.eq[Math.floor(Math.random()*DB.eq.length)];if(a!==b)conversaEspontanea(a,b);},2500);
+setTimeout(()=>{acaoReal('🤝 Harmonia sincronizada','Cheque '+c.lidas.length+'/'+neq()+' leituras + rádio em cadeia');save();},6000);}
 // 🎯 OPERAÇÕES EM HARMONIA — comando único, cadeia com efeito real
 const OPERACOES={
 campanha:{titulo:'🚀 Campanha Loja Virtual',passos:[
@@ -727,8 +737,8 @@ const st=document.getElementById('op-status');const bar=document.getElementById(
 // comando específico vira comunicado oficial que todos precisam ler em harmonia
 const cOp={id:Date.now(),texto:'OPERAÇÃO '+op.titulo+' — todos em posição e em harmonia',quando:new Date().toLocaleString('pt-BR'),lidas:[]};DB.comunicados.unshift(cOp);DB.comunicados=DB.comunicados.slice(0,10);
 ['op1','op2','op3'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
-feed('🎯 CEO lançou <b>'+op.titulo+'</b> — equipe em harmonia, leitura obrigatória');postRadio('🧑‍💼 CEO','📢 Todos os 15','OPERAÇÃO: '+op.titulo+' — cada um na sua posição, leiam e passem o bastão');
-(function passo(){if(i>=op.passos.length){opRodando=false;if(bar)bar.style.width='100%';st.textContent='✅ '+op.titulo+' concluída — equipe em harmonia.';postRadio('📢 Todos os 15','🧑‍💼 CEO','OPERAÇÃO CONCLUÍDA: '+op.titulo+' — todos alinhados ✅');acaoReal('🎯 '+op.titulo,'Cadeia executada em harmonia por '+op.passos.map(p=>p.n.split(' ')[0]).join(' → ')+' · comunicado '+cOp.lidas.length+'/15');['op1','op2','op3'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=false;});save();renderSocial();return;}
+feed('🎯 CEO lançou <b>'+op.titulo+'</b> — equipe em harmonia, leitura obrigatória');postRadio('🧑‍💼 CEO','📢 Todos os '+neq()+'','OPERAÇÃO: '+op.titulo+' — cada um na sua posição, leiam e passem o bastão');
+(function passo(){if(i>=op.passos.length){opRodando=false;if(bar)bar.style.width='100%';st.textContent='✅ '+op.titulo+' concluída — equipe em harmonia.';postRadio('📢 Todos os '+neq()+'','🧑‍💼 CEO','OPERAÇÃO CONCLUÍDA: '+op.titulo+' — todos alinhados ✅');acaoReal('🎯 '+op.titulo,'Cadeia executada em harmonia por '+op.passos.map(p=>p.n.split(' ')[0]).join(' → ')+' · comunicado '+cOp.lidas.length+'/'+neq());['op1','op2','op3'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=false;});save();renderSocial();return;}
 const p=op.passos[i];st.textContent='⏳ Passo '+(i+1)+'/'+op.passos.length+': '+p.n+' '+p.d+'…';if(bar)bar.style.width=Math.round(i/op.passos.length*100)+'%';
 try{p.fn();}catch(e){}
 const f=DB.eq.find(x=>x.n===p.n);if(f){f.feitos++;lerComunicados(f,true);}
@@ -740,8 +750,9 @@ function enviarOrdem(){const o=document.getElementById('ordem').value.toLowerCas
 if(o.includes('relat')){const t=DB.leads.length,c=DB.leads.filter(l=>l.etapa==='cliente').length;acaoReal('📋 Relatório do CEO','Total '+t+' leads · '+c+' clientes · conversão '+document.getElementById('c-conv').textContent);feed('🧑‍💼 CEO pediu <b>relatório</b> — Gabriel Santos entregou (ver Ações Reais)');}
 else if(o.includes('fila')||o.includes('encher')){if(autoLeads.length){const q=autoLeads.splice(0,5);q.forEach((a,i)=>DB.leads.unshift({id:Date.now()+i,nome:a.nome,tel:a.fone||'',origem:'Automação 🤖 '+(a.cidade||''),servico:'Site Institucional',valor:997,etapa:'novo',obs:'Da varredura — validar antes de abordar',data:new Date().toLocaleString('pt-BR')}));acaoReal('🚀 Ordem CEO: encher a fila','+'+q.length+' candidatos REAIS da varredura no funil');feed('🧑‍💼 CEO: <b>encher a fila</b> — equipe puxou '+q.length+' da varredura');}else{feed('🧑‍💼 CEO: fila pedida, mas varredura vazia — rode Buscar Leads ou Puxar automação');alert('Varredura vazia: clique em “Puxar leads da automação” ou “Buscar Leads” primeiro. Não invento leads falsos.');}}
 else if(o.includes('banner')){desenharBanner();acaoReal('🎨 Ordem CEO: banner','Banner regenerado 1080x1080');feed('🧑‍💼 CEO pediu banner — Camila entregou');}
+else if(o.includes('finan')){const r=roboFin(true);feed('🧑‍💼 CEO pediu auditoria — <b>Helena</b> executou: '+r);save();}
 else if(o.includes('cobrar')||o.includes('acomp')){let n=0;DB.leads.filter(l=>l.etapa==='novo').forEach(l=>{DB.tarefas.push({id:Date.now()+n,tit:'Cobrar '+l.nome,data:new Date().toISOString().slice(0,16),ok:false});n++;});acaoReal('⏰ Ordem CEO: acompanhar','+'+n+' lembretes criados');feed('🧑‍💼 CEO: acompanhar — '+n+' cobranças criadas');}
-else{feed('🧑‍💼 Ordem “'+o+'” delegada à equipe — em execução');acaoReal('📝 Ordem genérica','“'+o+'” registrada e distribuída aos 15');}
+else{feed('🧑‍💼 Ordem “'+o+'” delegada à equipe — em execução');acaoReal('📝 Ordem genérica','“'+o+'” registrada e distribuída aos '+neq());}
 save();document.getElementById('ordem').value='';}
 // NUVEM — mesmo controle PC + celular, sem estar conectado ao celular
 let cloudTimer=null;
