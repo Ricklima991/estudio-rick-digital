@@ -1,0 +1,18 @@
+ROSTOS DAS ROBÔS — como colocar fotos definitivas
+================================================
+O app procura nesta pasta, nesta ordem, para cada robô:
+  1) foto local (esta pasta) → 2) foto da internet → 3) iniciais
+
+Nomes exatos dos arquivos (jpg ou png — se usar png, avise):
+  fotos/helena.jpg   → Helena (Financeira)
+  fotos/vitoria.jpg  → Vitória (Guardiã)
+  fotos/livia.jpg    → Lívia (COO)
+  fotos/nina.jpg     → Nina (CHRO)
+
+COMO GERAR OS ROSTOS (grátis, 2 min):
+  - Abra um gerador de retratos por IA no celular (ex: Remini, Photoleap,
+    YouCam ou qualquer app de "AI avatar / AI portrait").
+  - Gere 1 rosto feminino para cada uma e salve com os nomes acima nesta pasta.
+  - Me avise que eu publico no app e no celular.
+
+Sem os arquivos, o app usa retratos ilustrativos da internet (somem sem internet).
