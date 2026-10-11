@@ -16,7 +16,8 @@ body::after{content:'';position:fixed;width:520px;height:520px;left:-160px;botto
 header,main,.app{position:relative;z-index:1}
 header{background:rgba(15,23,42,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff;padding:.8rem 1.2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:.6rem;border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 8px 28px rgba(2,6,23,.35)}
 .logo{display:flex;align-items:center;gap:.7rem}
-.logo-badge{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED 60%,#EC4899);display:grid;place-items:center;font-weight:900;font-size:1.2rem;color:#fff;box-shadow:0 6px 0 rgba(30,58,138,.9),0 12px 24px rgba(124,58,237,.45),inset 0 2px 3px rgba(255,255,255,.5);transform:perspective(400px) rotateX(6deg);transition:transform .3s}
+.logo-badge{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED 60%,#EC4899);display:grid;place-items:center;font-weight:900;font-size:1.2rem;color:#fff;box-shadow:0 6px 0 rgba(30,58,138,.9),0 12px 24px rgba(124,58,237,.45),inset 0 2px 3px rgba(255,255,255,.5);transform:perspective(400px) rotateX(6deg);transition:transform .3s;animation:lamp 7s linear infinite}
+@keyframes lamp{0%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(180deg) brightness(1.15)}100%{filter:hue-rotate(360deg) brightness(1)}}
 .logo:hover .logo-badge{transform:perspective(400px) rotateX(0deg) scale(1.06)}
 .logo b{font-size:1.05rem;letter-spacing:.3px;text-shadow:0 2px 8px rgba(0,0,0,.4)}.logo small{display:block;color:#93C5FD;font-weight:400;font-size:.72rem}
 .hbtns{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
