@@ -631,10 +631,6 @@ function alternarVoz(){vozOn=!vozOn;if(!vozOn)pararVoz();document.getElementById
 function ouvirCEO(){try{const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return alert('Este navegador não tem ditado por voz — use o Chrome.');const r=new R();r.lang='pt-BR';
 r.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById('ceo-fala').value=t;ceoFalar();};r.onerror=()=>alert('Não ouvi — cheque o microfone.');r.start();}catch(e){alert('Microfone indisponível aqui — use o link publicado (https).');}}
 if('speechSynthesis' in window){try{speechSynthesis.getVoices();}catch(e){}}
-salaPush('CEO','Reunião aberta. Quero números, time e a próxima jogada. (auto)');
-setTimeout(()=>salaPush('COO',cooFala()+' Proponho: '+j.t+'.'),900);
-setTimeout(()=>salaPush('CHRO',chroFala()+' Apoio a jogada da Lívia e assumo o acompanhamento.'),1900);
-setTimeout(()=>{salaPush('COO','Combinado com a Nina. Executando: '+j.t+'.');try{j.fn();}catch(e){}acaoReal('📋 Reunião da diretoria','Pauta executada: '+j.t);save();},3000);}
 // 📌 MURAL DO DIA — o mais importante, montado sozinho
 function renderMural(){const el=document.getElementById('mural');if(!el)return;const n=numerosResumo();const hj=new Date().toLocaleDateString('pt-BR');
 const feita=(DB.acoes||[]).filter(a=>a.ts&&new Date(a.ts).toLocaleDateString('pt-BR')===hj).slice(0,8);
