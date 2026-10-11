@@ -56,6 +56,9 @@ main{flex:1;padding:1.4rem;min-width:0}
 .btn-g:hover{filter:brightness(1.1);transform:translateY(-2px)}.btn-g:active{transform:translateY(4px);box-shadow:0 1px 0 #1E3A8A}
 .topo{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.8rem}
 .topo h1{text-shadow:0 2px 0 #fff,0 8px 20px rgba(37,99,235,.18)}
+.mao3d{display:inline-block;transform-origin:70% 70%;animation:acena 2.4s ease-in-out infinite;filter:drop-shadow(0 3px 0 rgba(0,0,0,.22)) drop-shadow(0 10px 14px rgba(37,99,235,.45))}
+@keyframes acena{0%,60%,100%{transform:perspective(300px) rotateY(-14deg) rotateZ(0deg)}10%,30%{transform:perspective(300px) rotateY(10deg) rotateZ(18deg)}20%,40%{transform:perspective(300px) rotateY(-10deg) rotateZ(-10deg)}}
+@media (prefers-reduced-motion:reduce){.mao3d,.marca3d,.logo-badge{animation:none}}
 .panel{background:rgba(255,255,255,.88);backdrop-filter:blur(10px);padding:1.3rem;border-radius:16px;margin-bottom:1.2rem;box-shadow:0 14px 32px rgba(2,6,23,.12),inset 0 1px 0 #fff;border:1px solid rgba(255,255,255,.9)}
 .panel h3{margin-bottom:.8rem}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -121,7 +124,7 @@ canvas#bannerCanvas{width:100%;max-width:420px;border-radius:16px;border:1px sol
 <main>
 <!-- DASH -->
 <div id="aba-dash" class="aba ativa">
-<div class="topo"><div><h1>Bem-vindo, Rick! 👋</h1><p class="legend">WhatsApp + TikTok trabalhando juntos · controle total</p></div><button class="btn-g" onclick="abrirLead()">+ Novo Lead</button></div>
+<div class="topo"><div><h1>Bem-vindo, Rick! <span class="mao3d">👋</span></h1><p class="legend">WhatsApp + TikTok trabalhando juntos · controle total</p></div><button class="btn-g" onclick="abrirLead()">+ Novo Lead</button></div>
 <div class="cards">
 <div class="card"><div>🆕 Novos Leads</div><div class="v" id="c-novos">0</div><small id="c-semana">esta semana</small></div>
 <div class="card" style="border-color:var(--s)"><div>✅ Clientes</div><div class="v" id="c-cli">0</div><small id="c-valor">R$ 0,00</small></div>
